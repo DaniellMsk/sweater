@@ -1,8 +1,10 @@
 package com.exaple.sweater.controller;
 
 import com.exaple.sweater.domain.Message;
+import com.exaple.sweater.domain.User;
 import com.exaple.sweater.repos.MessageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,8 +32,12 @@ public class MainController {
     }
 
     @PostMapping("/main")
-    public String add (@RequestParam String text, @RequestParam String tag, Map<String, Object> model) {
-        Message message = new Message(text, tag);
+    public String add (
+            @AuthenticationPrincipal User user,
+            @RequestParam String text,
+            @RequestParam String tag,
+            Map<String, Object> model) {
+        Message message = new Message(text, tag, user);
 
         messageRepo.save(message);
 
